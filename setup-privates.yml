@@ -10,11 +10,21 @@
       delegate_to: localhost
       when: state is not defined
 
-    - name: 公開鍵配布
-      authorized_key:
-        user: "{{ ansible_user }}"
-        key: "{{ lookup('file', private_key_path + '.pub') }}"
-        state: "{{ state | default('present') }}"
+    # - name: 公開鍵配布
+    #   authorized_key:
+    #     user: "{{ ansible_user }}"
+    #     key: "{{ lookup('file', private_key_path + '.pub') }}"
+    #     state: "{{ state | default('present') }}"
+
+    - name: 公開鍵配布 (chmod 700 ~/.ssh)
+      ansible.builtin.raw: |
+        chmod 700 ~/.ssh
+    - name: 公開鍵配布 (cat private_key >> ~/.ssh/authorized_keys)
+      ansible.builtin.raw: |
+        echo "{{ lookup('file', private_key_path + '.pub') }}" >> ~/.ssh/authorized_keys
+    - name: 公開鍵配布 (chmod 600 ~/.ssh/authorized_keys)
+      ansible.builtin.raw: |
+        chmod 600 ~/.ssh/authorized_keys
 
     - name: "~/.ssh/configの設定"
       blockinfile:
