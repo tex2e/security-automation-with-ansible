@@ -4,11 +4,30 @@
   gather_facts: no
 
   tasks:
+    - name: 接続先情報
+      debug:
+        msg: |-
+          ssh -p {{ ansible_port }} {{ ansible_user }}@{{ ansible_host }}
+
     - name: SSH鍵生成
       openssh_keypair:
         path: "{{ private_key_path }}"
       delegate_to: localhost
       when: state is not defined
+
+    - name: "~/.ssh/configの設定"
+      blockinfile:
+        dest: "{{ lookup('env', 'HOME') }}/.ssh/config"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ item }}"
+        content: |
+          Host {{ item }}
+            HostName {{ ansible_host }}
+            User {{ ansible_user }}
+            IdentityFile {{ private_key_path }}
+        state: "{{ state | default('present') }}"
+      delegate_to: localhost
+      run_once: true                  # configファイルの同時編集を回避するため
+      with_items: "{{ play_hosts }}"  # configファイルの同時編集を回避するため
 
     # - name: 公開鍵配布
     #   authorized_key:
@@ -25,17 +44,3 @@
     - name: 公開鍵配布 (chmod 600 ~/.ssh/authorized_keys)
       ansible.builtin.raw: |
         chmod 600 ~/.ssh/authorized_keys
-
-    - name: "~/.ssh/configの設定"
-      blockinfile:
-        dest: "{{ lookup('env', 'HOME') }}/.ssh/config"
-        marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ item }}"
-        content: |
-          Host {{ item }}
-            HostName {{ ansible_host }}
-            User {{ ansible_user }}
-            IdentityFile {{ private_key_path }}
-        state: "{{ state | default('present') }}"
-      delegate_to: localhost
-      run_once: true                  # configファイルの同時編集を回避するため
-      with_items: "{{ play_hosts }}"  # configファイルの同時編集を回避するため
