@@ -21,7 +21,7 @@
         chmod 700 ~/.ssh
     - name: 公開鍵配布 (cat private_key >> ~/.ssh/authorized_keys)
       ansible.builtin.raw: |
-        echo "{{ lookup('file', private_key_path + '.pub') }}" >> ~/.ssh/authorized_keys
+        echo "{{ lookup('file', private_key_path + '.pub')|quote }}" >> ~/.ssh/authorized_keys
     - name: 公開鍵配布 (chmod 600 ~/.ssh/authorized_keys)
       ansible.builtin.raw: |
         chmod 600 ~/.ssh/authorized_keys
