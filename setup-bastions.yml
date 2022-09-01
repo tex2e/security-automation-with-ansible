@@ -35,6 +35,9 @@
     #     key: "{{ lookup('file', private_key_path + '.pub') }}"
     #     state: "{{ state | default('present') }}"
 
+    - name: SSHフォルダ作成 (mkdir ~/.ssh)
+      ansible.builtin.raw: |
+        mkdir -p ~/.ssh
     - name: 公開鍵配布 (chmod 700 ~/.ssh)
       ansible.builtin.raw: |
         chmod 700 ~/.ssh
