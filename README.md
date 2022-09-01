@@ -19,12 +19,15 @@ ansible-playbook -i inventory.ini setup-bastions.yml setup-privates.yml
 ansible-playbook -i inventory.ini setup-privates.yml setup-bastions.yml -e "state=absent"
 ```
 
-### Playbook実行時の流れ
-1. SSH鍵生成（作成済みの場合は何もしない）
-2. ~/.ssh/configの修正（踏み台サーバの情報追加）
-3. 踏み台サーバに公開鍵配布
-4. ~/.ssh/configの修正（プライベートサーバの情報追加）
-5. 踏み台経由でプライベートサーバに公開鍵配布
+### 作業手順
+1. インベントリ(inventory.ini)の修正
+    - 変数 ansible_host, ansible_port, ansible_user, ansible_ssh_pass を接続先情報に合わせて修正
+2. Playbook実行 (ansible-playbook)
+    1. SSH鍵生成（作成済みの場合は何もしない）
+    2. ~/.ssh/configの修正（踏み台サーバの情報追加）
+    3. 踏み台サーバに公開鍵配布
+    4. ~/.ssh/configの修正（プライベートサーバの情報追加）
+    5. 踏み台経由でプライベートサーバに公開鍵配布
 
 <br>
 
