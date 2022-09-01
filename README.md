@@ -2,6 +2,7 @@
 # SSH公開鍵を配布するPlaybook (Ansible)
 
 ## 必要なツール
+MacOS
 - Ansible
 - sshpass
     ```
@@ -19,15 +20,19 @@ ansible-playbook -i inventory.ini setup-privates.yml setup-bastions.yml -e "stat
 ```
 
 ### Playbook実行時の流れ
-1. SSH鍵生成
-2. 公開鍵配布
-3. ~/.ssh/configの修正
-
-----
+1. SSH鍵生成（作成済みの場合は何もしない）
+2. ~/.ssh/configの修正（踏み台サーバの情報追加）
+3. 踏み台サーバに公開鍵配布
+4. ~/.ssh/configの修正（プライベートサーバの情報追加）
+5. 踏み台経由でプライベートサーバに公開鍵配布
 
 <br>
 
-### 検証環境
+----
+
+以下、開発者向けの内容です。
+
+### 検証環境の作成手順
 
 - 踏み台サーバ (bastion)：CentOS
     ```
