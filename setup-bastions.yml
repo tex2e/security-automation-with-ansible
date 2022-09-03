@@ -29,12 +29,7 @@
       run_once: true                  # configファイルの同時編集を回避するため
       with_items: "{{ play_hosts }}"  # configファイルの同時編集を回避するため
 
-    # - name: 公開鍵配布
-    #   authorized_key:
-    #     user: "{{ ansible_user }}"
-    #     key: "{{ lookup('file', private_key_path + '.pub') }}"
-    #     state: "{{ state | default('present') }}"
-
+    # 接続先にPythonが存在しない場合もあるため、authorized_keyモジュールは使用しないこと
     - name: SSHフォルダ作成 (mkdir ~/.ssh)
       ansible.builtin.raw: |
         mkdir -p ~/.ssh

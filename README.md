@@ -2,12 +2,11 @@
 # SSH公開鍵を配布するPlaybook (Ansible)
 
 ## 必要なツール
-MacOS
-- Ansible
-- sshpass
-    ```
-    brew install hudochenkov/sshpass/sshpass
-    ```
+MacOS :
+```
+brew install ansible
+brew install hudochenkov/sshpass/sshpass
+```
 
 ### SSH公開鍵認証の設定
 公開鍵の配布：
